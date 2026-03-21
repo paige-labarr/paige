@@ -178,6 +178,15 @@
             color: transparent;
         }
 
+        /* Mobile Optimization */
+        @media (max-width: 768px) {
+            .gradient-text { font-size: 2.5rem !important; }
+            section { padding: 40px 15px; }
+            header { padding: 60px 15px; }
+            .grid { grid-template-columns: 1fr; }
+            #contact h2 { font-size: 2rem !important; }
+        }
+
         /* Easter Egg: Shake & Matrix */
         
         #matrix-canvas {
@@ -339,7 +348,7 @@
             <div class="container">
                 <h2>Outside the Classroom</h2>
                 <p style="font-size: 1.1rem; margin-top: 20px;">
-                    When I'm not in the classroom, I'm usually boxing, open water swimming, or walking along the Erie Canal. I'm also on a constant quest for the best Jamaican Me Crazy cold brew in upstate New York.
+                    When I'm not in the classroom, I'm usually boxing, open water swimming, or walking along the Erie Canal. I'm also on a constant quest for the best cold brew in upstate New York.
                 </p>
             </div>
         </section>
@@ -347,9 +356,11 @@
         <section id="contact">
             <div class="container">
                 <h2 style="text-align: center; font-size: 3rem;" class="mono">print("Let's Collaborate!")</h2>
-                <form action="mailto:paigelabarr@gmail.com" method="post" enctype="text-plain">
+                <form id="contact-form">
                     <label for="name">Name</label>
                     <input type="text" id="name" name="name" required>
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
                     <label for="message">Collaboration Interests</label>
                     <textarea id="message" name="message" rows="5" required placeholder="AI, differentiation, tech integration..."></textarea>
                     <button type="submit">Send Transmission</button>
@@ -403,7 +414,7 @@
                 this.y = Math.random() * canvas.height;
                 this.vx = (Math.random() - 0.5) * 1; 
                 this.vy = (Math.random() - 0.5) * 1;
-                this.size = Math.random() * 2 + 1;
+                this.size = Math.random() * 2 + 1.5; // Increased size for better visibility
             }
             update() {
                 this.x += this.vx; this.y += this.vy;
@@ -411,8 +422,7 @@
                 if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
             }
             draw() {
-                ctx.fillStyle = 'rgba(79, 195, 247, 0.6)';
-                ctx.fillStyle = 'rgba(125, 249, 255, 0.8)';
+                ctx.fillStyle = 'rgba(224, 247, 250, 0.95)'; // Lighter blue with more opacity for contrast
                 ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
             }
         }
@@ -438,8 +448,7 @@
                     const dy = mouse.y - node.y;
                     const dist = Math.sqrt(dx*dx + dy*dy);
                     if (dist < 150) {
-                        ctx.strokeStyle = `rgba(79, 195, 247, ${1 - dist/150})`;
-                        ctx.strokeStyle = `rgba(125, 249, 255, ${1 - dist/150})`;
+                        ctx.strokeStyle = `rgba(224, 247, 250, ${1 - dist/150})`;
                         ctx.lineWidth = 1;
                         ctx.beginPath(); ctx.moveTo(node.x, node.y); ctx.lineTo(mouse.x, mouse.y); ctx.stroke();
                     }
@@ -452,8 +461,7 @@
                     const dy2 = node.y - node2.y;
                     const dist2 = Math.sqrt(dx2*dx2 + dy2*dy2);
                     if (dist2 < 100) {
-                        ctx.strokeStyle = `rgba(79, 195, 247, ${0.15 * (1 - dist2/100)})`;
-                        ctx.strokeStyle = `rgba(125, 249, 255, ${0.3 * (1 - dist2/100)})`;
+                        ctx.strokeStyle = `rgba(224, 247, 250, ${0.4 * (1 - dist2/100)})`;
                         ctx.lineWidth = 0.5;
                         ctx.beginPath(); ctx.moveTo(node.x, node.y); ctx.lineTo(node2.x, node2.y); ctx.stroke();
                     }
@@ -471,24 +479,51 @@
         if (backToTopBtn) backToTopBtn.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
         // 4. Easter Eggs
+        // 4. Contact Form Handler
+        const contactForm = document.getElementById('contact-form');
+        if (contactForm) {
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const btn = contactForm.querySelector('button');
+                const originalText = btn.textContent;
+                btn.textContent = 'Sending...';
+                btn.disabled = true;
+
+                fetch('https://script.google.com/macros/s/AKfycbxzNMo6PkB8FNqEuqJGOkE5MeJ6CfbHB-gvNTKgTjUNGCZOucOAU2vjzHFz4HKe3d8Eew/exec', {
+                    method: 'POST',
+                    body: new FormData(contactForm)
+                })
+                .then(() => {
+                    btn.textContent = 'Message Sent!';
+                    contactForm.reset();
+                    setTimeout(() => { btn.textContent = originalText; btn.disabled = false; }, 3000);
+                })
+                .catch(error => console.error('Error!', error.message));
+            });
+        }
+
+        // 5. Easter Eggs
         (function() {
             // Console Message
             console.log("%cLooking for secrets? You found one!", "color: #00e5ff; font-family: 'JetBrains Mono', monospace; font-size: 2rem; -webkit-text-stroke: 1px black;");
             console.log("%cIf you're a developer who loves creative solutions and wants to collaborate, you're in the right place. Reach out!", "color: #e0e0e0; font-family: 'Google Sans', sans-serif; font-size: 1rem;");
 
             // Profile Image Click
-            const profileImg = document.querySelector('.profile-img');
+            const profileImages = document.querySelectorAll('.profile-img');
             let profileClicks = 0;
-            if (profileImg) {
-                profileImg.addEventListener('click', () => {
+            
+            profileImages.forEach(img => {
+                img.addEventListener('click', () => {
                     profileClicks++;
                     if (profileClicks >= 5) {
-                        profileImg.style.transition = 'transform 0.5s ease';
-                        profileImg.style.transform = profileImg.style.transform === 'rotate(180deg)' ? 'rotate(0deg)' : 'rotate(180deg)';
+                        profileImages.forEach(pImg => {
+                            pImg.style.transition = 'transform 0.5s ease';
+                            pImg.style.transform = pImg.style.transform === 'rotate(180deg)' ? 'rotate(0deg)' : 'rotate(180deg)';
+                        });
                         profileClicks = 0; // Reset after toggle
                     }
                 });
-            }
+            });
 
             // Konami Code & Keyword Listener
             const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
@@ -508,9 +543,10 @@
 
                 // Keyword Logic
                 buffer += e.key.toLowerCase();
-                if (buffer.length > 10) buffer = buffer.slice(-10);
+                if (buffer.length > 20) buffer = buffer.slice(-20);
 
                 if (buffer.endsWith("coldbrew")) { triggerColdBrew();
+                } else if (buffer.endsWith("antigravity")) { triggerAntiGravity();
                 } else if (buffer.endsWith("gravity")) { triggerGravity();
                 } else if (buffer.endsWith("matrix")) { triggerMatrix();
                 } else if (buffer.endsWith("hacker")) { 
@@ -578,37 +614,83 @@
                 setTimeout(() => { if (matrixCanvas.classList.contains('matrix-active')) triggerMatrix(); }, 10000);
             }
 
+            let gravityAnimation;
+
             function triggerGravity() {
+                if (gravityAnimation) cancelAnimationFrame(gravityAnimation);
                 const selectors = 'p, h1, h2, h3, .card, .profile-img, button, input, textarea, iframe, .wave-divider';
                 const elements = document.querySelectorAll(selectors);
                 const bodies = [];
+
+                document.body.style.overflow = 'hidden';
                 
                 elements.forEach(el => {
                     const rect = el.getBoundingClientRect();
-                    el.style.position = 'fixed'; // Fix position to viewport so they fall properly
+
+                    // Special style handling for visibility during the fall
+                    if (el.classList.contains('gradient-text')) {
+                        el.style.background = 'none';
+                        el.style.color = 'var(--accent-cyan)';
+                        el.style.webkitTextFillColor = 'initial';
+                    }
+                    if (el.tagName.toLowerCase() === 'svg' && el.classList.contains('wave-divider')) {
+                        const path = el.querySelector('path');
+                        if (path) path.style.fill = 'var(--accent-blue)';
+                    }
+
+                    el.style.position = 'fixed';
                     el.style.left = rect.left + 'px';
                     el.style.top = rect.top + 'px';
                     el.style.width = rect.width + 'px';
                     el.style.margin = '0';
-                    el.style.transition = 'none'; // Disable CSS transitions for smooth physics
+                    el.style.transition = 'none';
+                    el.style.zIndex = '10000';
                     
                     bodies.push({ el: el, x: rect.left, y: rect.top, vx: (Math.random() - 0.5) * 4, vy: 0, width: rect.width, height: rect.height });
                 });
 
                 function step() {
                     bodies.forEach(b => {
-                        b.vy += 0.5; // Gravity
+                        b.vy += 0.5;
                         b.x += b.vx; b.y += b.vy;
                         
-                        if (b.y + b.height > window.innerHeight) { b.y = window.innerHeight - b.height; b.vy *= -0.6; b.vx *= 0.95; } // Floor bounce
-                        if (b.x < 0) { b.x = 0; b.vx *= -0.8; } // Left wall
-                        if (b.x + b.width > window.innerWidth) { b.x = window.innerWidth - b.width; b.vx *= -0.8; } // Right wall
+                        if (b.y + b.height > window.innerHeight) { b.y = window.innerHeight - b.height; b.vy *= -0.6; b.vx *= 0.95; }
+                        if (b.x < 0) { b.x = 0; b.vx *= -0.8; }
+                        if (b.x + b.width > window.innerWidth) { b.x = window.innerWidth - b.width; b.vx *= -0.8; }
 
                         b.el.style.left = b.x + 'px'; b.el.style.top = b.y + 'px';
                     });
-                    requestAnimationFrame(step);
+                    gravityAnimation = requestAnimationFrame(step);
                 }
                 step();
+            }
+
+            function triggerAntiGravity() {
+                if (gravityAnimation) cancelAnimationFrame(gravityAnimation);
+                document.body.style.overflow = '';
+                
+                const selectors = 'p, h1, h2, h3, .card, .profile-img, button, input, textarea, iframe, .wave-divider';
+                const elements = document.querySelectorAll(selectors);
+                
+                elements.forEach(el => {
+                    el.style.position = '';
+                    el.style.left = '';
+                    el.style.top = '';
+                    el.style.width = '';
+                    el.style.margin = '';
+                    el.style.transition = '';
+                    el.style.zIndex = '';
+                    
+                    if (el.classList.contains('gradient-text')) {
+                        el.style.background = '';
+                        el.style.color = '';
+                        el.style.webkitTextFillColor = '';
+                    }
+                    if (el.tagName.toLowerCase() === 'svg' && el.classList.contains('wave-divider')) {
+                        const path = el.querySelector('path');
+                        if (path) path.style.fill = '';
+                    }
+                });
             }
         })();
     </script>
