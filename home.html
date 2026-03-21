@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paige LaBarr | CS Innovator & PRODiG+ Faculty</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+    
+    <style>
+        :root {
+            /* Light Mode (Base) - High Contrast WCAG 2.2 AAA */
+            --bg-main: #ffffff;
+            --bg-alt: #f0f7ff;
+            --text-header: #ffffff;
+            --text-body: #002855;
+            --card-bg: #ffffff;
+            --nav-bg: #001f3f;
+            --accent-blue: #0074D9;
+            --accent-cyan: #4FC3F7;
+            --focus-ring: #ffbf00;
+            --wave-fill: #f0f7ff;
+        }
+
+        [data-theme="dark"] {
+            /* Dark Mode - Midnight High Contrast */
+            --bg-main: #0a0a0a;
+            --bg-alt: #111111;
+            --text-header: #ffffff;
+            --text-body: #e0e0e0;
+            --card-bg: #1a1a1a;
+            --nav-bg: #000000;
+            --accent-blue: #00e5ff;
+            --accent-cyan: #7df9ff;
+            --wave-fill: #111111;
+        }
+
+        [data-theme="dark"] #profile-img-light {
+            display: none;
+        }
+        [data-theme="dark"] #profile-img-dark {
+            display: inline-block;
+        }
+        #profile-img-dark {
+            display: none;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Google Sans', sans-serif;
+            line-height: 1.6;
+            color: var(--text-body);
+            background-color: var(--bg-main);
+            transition: background-color 0.3s ease, color 0.3s ease;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, .mono { font-family: 'JetBrains Mono', monospace; }
+
+        /* Accessibility: Skip to Content */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--accent-cyan);
+            color: #000;
+            padding: 8px;
+            z-index: 2000;
+        }
+        .skip-link:focus { top: 0; }
+
+        /* Header & Canvas Background */
+        header {
+            background: linear-gradient(180deg, #001f3f 0%, #000000 100%);
+            color: var(--text-header);
+            padding: 100px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #hero-canvas {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0.4; pointer-events: none;
+        }
+
+        .container { max-width: 1000px; margin: 0 auto; position: relative; z-index: 2; }
+
+        .profile-img {
+            width: 180px; height: 180px; border-radius: 50%;
+            border: 4px solid var(--accent-cyan);
+            margin-bottom: 20px; object-fit: cover;
+        }
+
+        /* Navigation */
+        nav {
+            background: var(--nav-bg);
+            padding: 15px;
+            position: sticky;
+            top: 0; z-index: 1000;
+            border-bottom: 2px solid var(--accent-blue);
+        }
+
+        nav ul { display: flex; justify-content: center; align-items: center; list-style: none; gap: 20px; flex-wrap: wrap; }
+        nav a { color: white; text-decoration: none; font-weight: bold; font-size: 0.9rem; text-transform: uppercase; }
+        nav a:hover, nav a:focus { color: var(--accent-cyan); outline: 2px solid var(--focus-ring); }
+
+        #theme-toggle {
+            position: fixed; top: 20px; right: 20px; z-index: 2001;
+            background: var(--nav-bg); border: 2px solid var(--accent-cyan); color: var(--accent-cyan);
+            padding: 5px 12px; cursor: pointer; font-size: 1.2rem; border-radius: 20px; line-height: 1;
+            display: flex; gap: 8px; align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        #theme-toggle span { transition: opacity 0.3s ease, transform 0.3s ease; }
+
+        /* Light Mode (Default) State */
+        html:not([data-theme="dark"]) #theme-toggle .sun { opacity: 1; transform: scale(1.1); filter: none; }
+        html:not([data-theme="dark"]) #theme-toggle .moon { opacity: 0.3; transform: scale(0.8); filter: grayscale(100%); }
+
+        /* Dark Mode State */
+        [data-theme="dark"] #theme-toggle .sun { opacity: 0.3; transform: scale(0.8); filter: grayscale(100%); }
+        [data-theme="dark"] #theme-toggle .moon { opacity: 1; transform: scale(1.1); filter: none; }
+
+        /* Layout & Cards */
+        section { padding: 80px 20px; }
+        .alt-bg { background-color: var(--bg-alt); }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 40px; }
+        
+        .card { 
+            background: var(--card-bg); padding: 25px; 
+            border-left: 5px solid var(--accent-blue);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-radius: 8px; 
+        }
+
+        .wave-divider { width: 100%; height: auto; display: block; }
+        .wave-divider path { fill: var(--wave-fill); transition: fill 0.3s ease; }
+
+        /* Form */
+        form { max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px; }
+        input, textarea { 
+            width: 100%; padding: 12px; border: 2px solid var(--accent-blue); 
+            background: var(--card-bg); color: var(--text-body); font-size: 1rem;
+        }
+        button[type="submit"] {
+            background: var(--nav-bg); color: white; padding: 15px; border: 2px solid var(--accent-cyan);
+            font-family: 'JetBrains Mono', monospace; cursor: pointer; transition: 0.3s;
+        }
+        button[type="submit"]:hover { background: var(--accent-blue); }
+
+        /* Back to Top Scroll Button */
+        #back-to-top-btn {
+            position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px;
+            background: var(--nav-bg); border: 2px solid var(--accent-cyan); border-radius: 50%;
+            cursor: pointer; display: none; z-index: 1001; align-items: center; justify-content: center;
+        }
+        #back-to-top-btn svg { width: 35px; height: 35px; fill: var(--accent-cyan); }
+        #back-to-top-btn:hover { transform: translateY(-10px); }
+
+        /* Videos */
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; margin-bottom: 15px; border: 1px solid var(--accent-blue); }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+
+        footer { background: var(--nav-bg); color: white; text-align: center; padding: 40px 20px; }
+        .social-links a { color: var(--accent-cyan); margin: 0 15px; text-decoration: none; font-weight: bold; }
+
+        .gradient-text {
+            background: linear-gradient(90deg, #ffffff, var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* Easter Egg: Shake & Matrix */
+        
+        #matrix-canvas {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 50; pointer-events: none; opacity: 0; transition: opacity 0.5s;
+        }
+        .matrix-active { opacity: 1 !important; }
+
+        /* Easter Egg: Hacker Mode */
+        .hacker-mode { background: #000 !important; color: #0f0 !important; }
+        .hacker-mode * {
+            font-family: 'JetBrains Mono', monospace !important;
+            color: #0f0 !important;
+            background-color: transparent !important;
+            border-color: #0f0 !important;
+        }
+        .hacker-mode .gradient-text {
+            background: linear-gradient(90deg, #0f0, #0f0) !important;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: #0f0 !important;
+        }
+        .hacker-mode .profile-img, .hacker-mode .video-container, .hacker-mode #hero-canvas, .hacker-mode #back-to-top-btn svg {
+            filter: invert(1) hue-rotate(180deg);
+        }
+        .hacker-mode .wave-divider path { fill: #000 !important; }
+        .hacker-mode::after {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: repeating-linear-gradient( 0deg, rgba(0, 255, 0, 0.15), rgba(0, 255, 0, 0.15) 1px, transparent 1px, transparent 3px );
+            z-index: 9999;
+            pointer-events: none;
+            animation: flicker 0.15s infinite;
+        }
+        @keyframes flicker {
+            0% { opacity: 0.2; }
+            20% { opacity: 0.8; }
+            40% { opacity: 0.3; }
+            60% { opacity: 1; }
+            80% { opacity: 0.4; }
+            100% { opacity: 0.9; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            h1:hover, h2:hover, h3:hover { animation: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="matrix-canvas"></canvas>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <header role="banner">
+        <canvas id="hero-canvas"></canvas>
+        <div class="container">
+            <img src="https://docs.google.com/drawings/d/e/2PACX-1vRuRZU-PM2aY2KdAQAinVLR8OrGlpedcxS1z0k0zxNuu_1UhORRo8x0TkrmFBZg7up7TpLjJ7Tr7vCF/pub?w=960&h=720" alt="Paige LaBarr" class="profile-img" id="profile-img-light">
+            <img src="https://docs.google.com/drawings/d/e/2PACX-1vTC30qgScjYKzmfnkl9w2Odr2KTV04jZAlL2dqOZhLF6R4SHs1Qq0ctuktXlCsgOx4UBQVe-Xm-loQM/pub?w=600&h=720" alt="Paige LaBarr" class="profile-img" id="profile-img-dark">
+            <h1 class="gradient-text" style="font-family: 'Google Sans', sans-serif; font-size: 4rem;">Paige LaBarr</h1>
+            <p class="mono" style="color: var(--accent-cyan); font-weight: bold;">PRODiG+ Faculty & Computer Science Innovator</p>
+            <p style="margin-top:20px; max-width: 750px; margin-left: auto; margin-right: auto; font-style: italic;">
+                Drilling into the core of how we learn, so we can build a better why.
+            </p>
+        </div>
+    </header>
+
+    <nav aria-label="Main Navigation">
+        <ul>
+            <li><a href="#about">About</a></li>
+            <li><a href="#portfolio">AI & Tech</a></li>
+            <li><a href="#teaching">Teaching</a></li>
+            <li><a href="#contact">Collaborate</a></li>
+        </ul>
+    </nav>
+    <button id="theme-toggle" aria-label="Toggle dark mode" title="Switch Theme"><span class="sun">☀️</span><span class="moon">🌙</span></button>
+
+    <main id="main-content">
+        <section id="about" class="container">
+            <h2 style="font-family: 'Google Sans', sans-serif;">Hi, I'm Paige.</h2>
+            <p style="margin-top: 20px;">I teach Computing Sciences at Finger Lakes Community College in Canandaigua, NY. Before that, I spent years teaching high school math and CS, then moved into administration, where I developed a systems-level view of education and a fluency for how all of it really works — both of which followed me back into the classroom. That realization quietly reshaped how I approach everything: course design, classroom expectations, who gets access to CS education. It also changed how I talk about failure in a classroom, and what I expect learners to do when they hit a wall.</p>
+            <p style="margin-top: 15px; font-weight: bold; color: var(--accent-blue);">AI didn't change what I care about. It just raised the stakes.</p>
+            <p style="margin-top: 15px;">I've found that AI hasn't made thinking less necessary; it's made it more visible. When a tool can generate an answer in seconds, the focus shifts from the output to the inquiry: Is this the right question, and do I actually understand the result? Used thoughtfully, AI lowers the cognitive load of getting started, clearing the noise so the productive struggle can begin. AI is a surprisingly effective mirror for metacognition; the learners who excel with these tools aren't the ones who trust them most, but the ones who know the difference between AI lowering the floor and raising the ceiling for what they can achieve.</p>
+            
+            <div class="grid">
+                <div class="card">
+                    <h3>Recent Presentations</h3>
+                    <ul style="padding-left: 20px; list-style-type: none;">
+                        <li style="margin-bottom: 15px;"><br><strong>3/11/2026:</strong> Panelist — AI and Student Learning Outcomes: Opportunities, Challenges, and Classroom Strategies.</li>
+                        <li style="margin-bottom: 15px;"><strong>3/11/2026:</strong> Facilitator — AI Lab Work Session on Teaching and Learning Day. Guided faculty across departments from AI-curious to AI-capable through hands-on, WCAG-compliant LMS interactives.</li>
+                        <li><strong>3/19/2026:</strong> Tech Guide — Facilitated informal, rapid-fire demos of Google Vids for regional workforce participants, translating AI theory into practical industry fluency.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Current Collaborative Endeavors</h3>
+                    <ul style="padding-left: 20px; list-style-type: none;">
+                        <li style="margin-bottom: 15px;"><br><strong>Spring 2026:</strong> Member of FLCC AI Book Club. Discussing ideas connected to <em>Teaching Effectively with ChatGPT</em> and <em>Empire of AI</em>.</li>
+                        <li style="margin-bottom: 15px;"><strong>Spring 2026:</strong> Pedagogical Spark Community. Exploring AI in Higher Education.</li>
+                        <li><strong>Spring 2026:</strong> FLCC Pilot Project on AI-Enhanced Learning. Increasing personalization in CSC-117: Python. </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <svg class="wave-divider" viewBox="0 0 1440 120" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0,64L80,69.3C160,75,320,85,480,80C640,75,800,53,960,48C1120,43,1280,53,1360,58.7L1440,64V120H0Z"></path>
+        </svg>
+
+        <section id="portfolio" class="alt-bg">
+            <div class="container">
+                <h2>Innovation & Artifacts</h2>
+                <div class="grid">
+                    <div>
+                        <h3>AI Lab - FLCC Teaching & Learning Day</h3>
+                        <div class="video-container">
+                            <iframe src="https://drive.google.com/file/d/1WmcbbvJ3omEtJF-agAYVYR23lSTS8-WFKo2Tlt_3MvM/preview" title="AI Lab Video" allowfullscreen></iframe>
+                        </div>
+                        <p style="text-align: center; font-size: 0.9rem; margin-top: 5px;"><a href="https://drive.google.com/file/d/1WmcbbvJ3omEtJF-agAYVYR23lSTS8-WFKo2Tlt_3MvM/view" target="_blank">Watch on Drive</a></p>
+                    </div>
+                    <div>
+                        <h3>Google Vids Demo - FLX AI Hub</h3>
+                        <div class="video-container">
+                            <iframe src="https://drive.google.com/file/d/1AL-twQjHG-0F4t-wy4r1tFcCgbYHlf2ZiU6PqmVgsk0/preview" title="Google Vids Portfolio" allowfullscreen></iframe>
+                        </div>
+                        <p style="text-align: center; font-size: 0.9rem; margin-top: 5px;"><a href="https://drive.google.com/file/d/1AL-twQjHG-0F4t-wy4r1tFcCgbYHlf2ZiU6PqmVgsk0/view" target="_blank">Watch on Drive</a></p>
+                    </div>
+                </div>
+                <div class="grid">
+                    <div class="card">
+                        <h3>Spectrum of AI Use</h3>
+                        <p>Classroom activity for navigating academic integrity.</p>
+                        <a href="https://docs.google.com/document/d/1mMoA6JBOJBp5_mzKtP3J3a4MYgz-LrdWQ5oqxdFofLo/edit?usp=sharing" target="_blank" class="mono">Open Google Doc &rarr;</a>
+                    </div>
+                    <div class="card">
+                        <h3>AI Lab Handout</h3>
+                        <p>Guide for faculty during the AI-enhanced learning lab.</p>
+                        <a href="https://docs.google.com/document/d/1mYwnXeoGd9zTlKVhmrXIibh5CAymRDIj1QFaqe-poBo/edit?usp=sharing" class="mono">Open Google Doc &rarr;</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="teaching" class="container">
+            <h2>Academic Leadership</h2>
+            <div class="grid">
+                <div class="card">
+                    <h4>Current FLCC Courses</h4>
+                    <p class="mono" style="font-size: 0.9rem; color: var(--accent-blue);">Python, Java (CS1 & CS2), Tech for Educators, CS Portal</p>
+                    <p style="margin-top: 10px;">Focused on differentiated, AI-scaffolded instruction for all learners.</p>
+                </div>
+                <div class="card">
+                    <h4>AP CS Reader</h4>
+                    <p><br>Previously an AP Computer Science Principles Reader & Table Reader for the College Board. Shifting to the AP CS A Reading in Summer 2026!</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="outside" class="alt-bg">
+            <div class="container">
+                <h2>Outside the Classroom</h2>
+                <p style="font-size: 1.1rem; margin-top: 20px;">
+                    When I'm not in the classroom, I'm usually boxing, open water swimming, or walking along the Erie Canal. I'm also on a constant quest for the best Jamaican Me Crazy cold brew in upstate New York.
+                </p>
+            </div>
+        </section>
+
+        <section id="contact">
+            <div class="container">
+                <h2 style="text-align: center; font-size: 3rem;" class="mono">print("Let's Collaborate!")</h2>
+                <form action="mailto:paigelabarr@gmail.com" method="post" enctype="text-plain">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name" required>
+                    <label for="message">Collaboration Interests</label>
+                    <textarea id="message" name="message" rows="5" required placeholder="AI, differentiation, tech integration..."></textarea>
+                    <button type="submit">Send Transmission</button>
+                </form>
+            </div>
+        </section>
+
+    <footer>
+        <div class="social-links">
+            <a href="https://www.linkedin.com/in/paige-labarr-542066115/" target="_blank">LINKEDIN</a>
+            <a href="https://x.com/PaigeLaBarr" target="_blank">X (TWITTER)</a>
+        </div>
+        <p style="margin-top: 20px; font-size: 0.8rem; opacity: 0.7;"> 2026 - Paige LaBarr</p>
+        <div style="margin-top: 30px; font-size: 0.75rem; opacity: 0.5; font-family: 'JetBrains Mono', monospace;">
+            <p><strong>Secrets:</strong> Try typing "java", "python", "coldbrew", or "shark".<br>
+            Click my profile pic 5x, type "matrix", or type "gravity".</p>
+        </div>
+    </footer>
+
+    <button id="back-to-top-btn" aria-label="Back to top">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14l-6-6z"/></svg>
+    </button>
+
+    <script>
+        // 1. Theme Toggle Logic
+        const toggleBtn = document.getElementById('theme-toggle');
+        toggleBtn.addEventListener('click', () => {
+            let theme = document.documentElement.getAttribute('data-theme');
+            if (theme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'light');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        });
+
+        // 2. Neural Network (Constellation) Effect
+        const canvas = document.getElementById('hero-canvas');
+        const ctx = canvas.getContext('2d');
+        let nodes = [];
+        let mouse = { x: null, y: null };
+        
+        canvas.width = window.innerWidth;
+        canvas.height = 450;
+
+        class Node {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 1; 
+                this.vy = (Math.random() - 0.5) * 1;
+                this.size = Math.random() * 2 + 1;
+            }
+            update() {
+                this.x += this.vx; this.y += this.vy;
+                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+            }
+            draw() {
+                ctx.fillStyle = 'rgba(79, 195, 247, 0.6)';
+                ctx.fillStyle = 'rgba(125, 249, 255, 0.8)';
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+            }
+        }
+
+        function initNodes() {
+            nodes = [];
+            const count = window.innerWidth < 600 ? 40 : 80;
+            for(let i=0; i<count; i++) nodes.push(new Node());
+        }
+        initNodes();
+
+        window.addEventListener('mousemove', (e) => { mouse.x = e.pageX; mouse.y = e.pageY; });
+        window.addEventListener('resize', () => { canvas.width = window.innerWidth; initNodes(); });
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            nodes.forEach((node, i) => {
+                node.update(); node.draw();
+                
+                // Connect to mouse
+                if (mouse.x) {
+                    const dx = mouse.x - node.x;
+                    const dy = mouse.y - node.y;
+                    const dist = Math.sqrt(dx*dx + dy*dy);
+                    if (dist < 150) {
+                        ctx.strokeStyle = `rgba(79, 195, 247, ${1 - dist/150})`;
+                        ctx.strokeStyle = `rgba(125, 249, 255, ${1 - dist/150})`;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath(); ctx.moveTo(node.x, node.y); ctx.lineTo(mouse.x, mouse.y); ctx.stroke();
+                    }
+                }
+
+                // Connect to other nodes
+                for (let j = i; j < nodes.length; j++) {
+                    const node2 = nodes[j];
+                    const dx2 = node.x - node2.x;
+                    const dy2 = node.y - node2.y;
+                    const dist2 = Math.sqrt(dx2*dx2 + dy2*dy2);
+                    if (dist2 < 100) {
+                        ctx.strokeStyle = `rgba(79, 195, 247, ${0.15 * (1 - dist2/100)})`;
+                        ctx.strokeStyle = `rgba(125, 249, 255, ${0.3 * (1 - dist2/100)})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.beginPath(); ctx.moveTo(node.x, node.y); ctx.lineTo(node2.x, node2.y); ctx.stroke();
+                    }
+                }
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // 3. Back to Top Button
+        const backToTopBtn = document.getElementById('back-to-top-btn');
+        window.onscroll = () => {
+            if (backToTopBtn) backToTopBtn.style.display = (window.scrollY > 300) ? "flex" : "none";
+        };
+        if (backToTopBtn) backToTopBtn.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        // 4. Easter Eggs
+        (function() {
+            // Console Message
+            console.log("%cLooking for secrets? You found one!", "color: #00e5ff; font-family: 'JetBrains Mono', monospace; font-size: 2rem; -webkit-text-stroke: 1px black;");
+            console.log("%cIf you're a developer who loves creative solutions and wants to collaborate, you're in the right place. Reach out!", "color: #e0e0e0; font-family: 'Google Sans', sans-serif; font-size: 1rem;");
+
+            // Profile Image Click
+            const profileImg = document.querySelector('.profile-img');
+            let profileClicks = 0;
+            if (profileImg) {
+                profileImg.addEventListener('click', () => {
+                    profileClicks++;
+                    if (profileClicks >= 5) {
+                        profileImg.style.transition = 'transform 0.5s ease';
+                        profileImg.style.transform = profileImg.style.transform === 'rotate(180deg)' ? 'rotate(0deg)' : 'rotate(180deg)';
+                        profileClicks = 0; // Reset after toggle
+                    }
+                });
+            }
+
+            // Konami Code & Keyword Listener
+            const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+            let konamiIndex = 0;
+            let buffer = "";
+            const footerCopy = document.querySelector('footer p'); // Select footer text for click trigger
+
+            window.addEventListener('keydown', (e) => {
+                // Konami Logic
+                if (e.key === konamiCode[konamiIndex]) {
+                    konamiIndex++;
+                    if (konamiIndex === konamiCode.length) {
+                        document.body.classList.toggle('hacker-mode');
+                        konamiIndex = 0;
+                    }
+                } else { konamiIndex = 0; }
+
+                // Keyword Logic
+                buffer += e.key.toLowerCase();
+                if (buffer.length > 10) buffer = buffer.slice(-10);
+
+                if (buffer.endsWith("coldbrew")) { triggerColdBrew();
+                } else if (buffer.endsWith("gravity")) { triggerGravity();
+                } else if (buffer.endsWith("matrix")) { triggerMatrix();
+                } else if (buffer.endsWith("hacker")) { 
+                    document.body.classList.toggle('hacker-mode'); 
+                } else if (buffer.endsWith("shark")) { createFloatingEmoji('🦈');
+                } else if (buffer.endsWith("java")) { createFloatingEmoji('☕');
+                } else if (buffer.endsWith("python")) { createFloatingEmoji('🐍'); }
+            });
+
+            // Secret Click Trigger on Footer
+            if (footerCopy) {
+                footerCopy.style.cursor = "pointer";
+                footerCopy.addEventListener('click', () => document.body.classList.toggle('hacker-mode'));
+            }
+
+            function createFloatingEmoji(emoji) {
+                const floater = document.createElement('div');
+                floater.textContent = emoji;
+                Object.assign(floater.style, { position: 'fixed', left: `${Math.random() * 90}vw`, bottom: '-50px', fontSize: '4rem', zIndex: '9999', pointerEvents: 'none', transition: 'all 4s linear' });
+                document.body.appendChild(floater);
+                setTimeout(() => Object.assign(floater.style, { bottom: '110vh', opacity: '0' }), 10);
+                setTimeout(() => floater.remove(), 4000);
+            }
+            
+            // 5. Advanced Easter Eggs Functions
+            function triggerColdBrew() {
+                for(let i=0; i<40; i++) {
+                    setTimeout(() => createFloatingEmoji(Math.random() > 0.5 ? '☕' : '🧊'), i * 80);
+                }
+            }
+
+            const matrixCanvas = document.getElementById('matrix-canvas');
+            const mCtx = matrixCanvas.getContext('2d');
+            let matrixInterval;
+            
+            function triggerMatrix() {
+                if (matrixCanvas.classList.contains('matrix-active')) {
+                    matrixCanvas.classList.remove('matrix-active');
+                    clearInterval(matrixInterval);
+                    setTimeout(() => mCtx.clearRect(0,0,matrixCanvas.width, matrixCanvas.height), 500);
+                    return;
+                }
+                
+                matrixCanvas.classList.add('matrix-active');
+                matrixCanvas.width = window.innerWidth;
+                matrixCanvas.height = window.innerHeight;
+                
+                const chars = '01XYZ<>';
+                const fontSize = 14;
+                const columns = matrixCanvas.width / fontSize;
+                const drops = Array(Math.floor(columns)).fill(1);
+
+                function draw() {
+                    mCtx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                    mCtx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+                    mCtx.fillStyle = '#0F0';
+                    mCtx.font = fontSize + 'px monospace';
+                    for(let i = 0; i < drops.length; i++) {
+                        mCtx.fillText(chars[Math.floor(Math.random()*chars.length)], i*fontSize, drops[i]*fontSize);
+                        if(drops[i]*fontSize > matrixCanvas.height && Math.random() > 0.975) drops[i] = 0;
+                        drops[i]++;
+                    }
+                }
+                matrixInterval = setInterval(draw, 33);
+                setTimeout(() => { if (matrixCanvas.classList.contains('matrix-active')) triggerMatrix(); }, 10000);
+            }
+
+            function triggerGravity() {
+                const selectors = 'p, h1, h2, h3, .card, .profile-img, button, input, textarea, iframe, .wave-divider';
+                const elements = document.querySelectorAll(selectors);
+                const bodies = [];
+                
+                elements.forEach(el => {
+                    const rect = el.getBoundingClientRect();
+                    el.style.position = 'fixed'; // Fix position to viewport so they fall properly
+                    el.style.left = rect.left + 'px';
+                    el.style.top = rect.top + 'px';
+                    el.style.width = rect.width + 'px';
+                    el.style.margin = '0';
+                    el.style.transition = 'none'; // Disable CSS transitions for smooth physics
+                    
+                    bodies.push({ el: el, x: rect.left, y: rect.top, vx: (Math.random() - 0.5) * 4, vy: 0, width: rect.width, height: rect.height });
+                });
+
+                function step() {
+                    bodies.forEach(b => {
+                        b.vy += 0.5; // Gravity
+                        b.x += b.vx; b.y += b.vy;
+                        
+                        if (b.y + b.height > window.innerHeight) { b.y = window.innerHeight - b.height; b.vy *= -0.6; b.vx *= 0.95; } // Floor bounce
+                        if (b.x < 0) { b.x = 0; b.vx *= -0.8; } // Left wall
+                        if (b.x + b.width > window.innerWidth) { b.x = window.innerWidth - b.width; b.vx *= -0.8; } // Right wall
+
+                        b.el.style.left = b.x + 'px'; b.el.style.top = b.y + 'px';
+                    });
+                    requestAnimationFrame(step);
+                }
+                step();
+            }
+        })();
+    </script>
+</body>
+</html>
