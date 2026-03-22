@@ -82,6 +82,16 @@
             overflow: hidden;
         }
 
+        /* Interactive Header Name */
+        header h1 {
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            touch-action: manipulation; /* Optimizes for touch/double-tap */
+            user-select: none; /* Prevents selection on double-click */
+            -webkit-user-select: none;
+        }
+        header h1:hover { transform: scale(1.05); }
+
         #hero-canvas {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -234,6 +244,18 @@
         @media (prefers-reduced-motion: reduce) {
             h1:hover, h2:hover, h3:hover { animation: none; }
         }
+
+        /* Typing Animation */
+        .typing-text {
+            display: inline-block;
+            overflow: hidden;
+            border-right: 3px solid var(--accent-cyan);
+            white-space: nowrap;
+            width: 0;
+            animation: typing 3.5s steps(31, end) forwards, blink-caret 0.75s step-end infinite;
+        }
+        @keyframes typing { from { width: 0 } to { width: 31ch; } }
+        @keyframes blink-caret { from, to { border-color: transparent } 50% { border-color: var(--accent-cyan); } }
     </style>
 </head>
 <body>
@@ -247,7 +269,7 @@
             <img src="https://docs.google.com/drawings/d/e/2PACX-1vRuRZU-PM2aY2KdAQAinVLR8OrGlpedcxS1z0k0zxNuu_1UhORRo8x0TkrmFBZg7up7TpLjJ7Tr7vCF/pub?w=960&h=720" alt="Paige LaBarr" class="profile-img" id="profile-img-light">
             <img src="https://docs.google.com/drawings/d/e/2PACX-1vTC30qgScjYKzmfnkl9w2Odr2KTV04jZAlL2dqOZhLF6R4SHs1Qq0ctuktXlCsgOx4UBQVe-Xm-loQM/pub?w=600&h=720" alt="Paige LaBarr" class="profile-img" id="profile-img-dark">
             <h1 class="gradient-text" style="font-family: 'Google Sans', sans-serif; font-size: 4rem;">Paige LaBarr</h1>
-            <p class="mono" style="color: var(--accent-cyan); font-weight: bold;">CS | AI | PRODiG+
+            <p class="mono typing-text" style="color: var(--accent-cyan); font-weight: bold;">Computer Science | AI | PRODiG+
             </p>
             <p style="margin-top:20px; max-width: 750px; margin-left: auto; margin-right: auto; font-style: italic;">
                 Using AI to lower the floor for entry and raise the ceiling for innovation.
@@ -345,15 +367,6 @@
             </div>
         </section>
 
-        <section id="outside" class="alt-bg">
-            <div class="container">
-                <h2>Outside the Classroom</h2>
-                <p style="font-size: 1.1rem; margin-top: 20px;">
-                    When I'm not in the classroom, I'm usually boxing, open water swimming, or walking along the Erie Canal. I'm also on a constant quest for the best cold brew in upstate New York.
-                </p>
-            </div>
-        </section>
-
         <section id="contact">
             <div class="container">
                 <h2 style="text-align: center; font-size: 3rem;" class="mono">print("Let's Collaborate!")</h2>
@@ -379,8 +392,8 @@
             Built in GitHub Codespaces with Gemini 2.5 & Gemini 3
         </p>
         <div style="margin-top: 30px; font-size: 0.75rem; opacity: 0.5; font-family: 'JetBrains Mono', monospace;">
-            <p><strong>Made it this far?</strong>Click my profile pic 5x.<br>
-            Or press + hold the picture! Enjoy.</p>
+            <p><strong>Made it this far?</strong> Click on or tap my profile pic 5x.<br>
+            Or double click on my name! Enjoy.</p>
         </div>
     </footer>
 
@@ -516,10 +529,6 @@
             // Profile Image Click
             const profileImages = document.querySelectorAll('.profile-img');
             let profileClicks = 0;
-            let pressTimer;
-
-            const startPress = () => { pressTimer = setTimeout(triggerColdBrew, 3000); };
-            const cancelPress = () => { clearTimeout(pressTimer); };
             
             profileImages.forEach(img => {
                 img.addEventListener('click', () => {
@@ -532,15 +541,13 @@
                         profileClicks = 0; // Reset after toggle
                     }
                 });
-
-                // Long Press for Cold Brew
-                img.addEventListener('mousedown', startPress);
-                img.addEventListener('touchstart', startPress, {passive: true});
-                img.addEventListener('mouseup', cancelPress);
-                img.addEventListener('mouseleave', cancelPress);
-                img.addEventListener('touchend', cancelPress);
-                img.addEventListener('contextmenu', e => e.preventDefault()); // Prevent menu on mobile hold
             });
+
+            // Name Double Click for Cold Brew
+            const nameHeader = document.querySelector('header h1');
+            if (nameHeader) {
+                nameHeader.addEventListener('dblclick', triggerColdBrew);
+            }
 
             // Konami Code & Keyword Listener
             const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
