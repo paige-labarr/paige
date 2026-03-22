@@ -516,6 +516,10 @@
             // Profile Image Click
             const profileImages = document.querySelectorAll('.profile-img');
             let profileClicks = 0;
+            let pressTimer;
+
+            const startPress = () => { pressTimer = setTimeout(triggerColdBrew, 3000); };
+            const cancelPress = () => { clearTimeout(pressTimer); };
             
             profileImages.forEach(img => {
                 img.addEventListener('click', () => {
@@ -528,6 +532,14 @@
                         profileClicks = 0; // Reset after toggle
                     }
                 });
+
+                // Long Press for Cold Brew
+                img.addEventListener('mousedown', startPress);
+                img.addEventListener('touchstart', startPress, {passive: true});
+                img.addEventListener('mouseup', cancelPress);
+                img.addEventListener('mouseleave', cancelPress);
+                img.addEventListener('touchend', cancelPress);
+                img.addEventListener('contextmenu', e => e.preventDefault()); // Prevent menu on mobile hold
             });
 
             // Konami Code & Keyword Listener
@@ -535,6 +547,16 @@
             let konamiIndex = 0;
             let buffer = "";
             const footerCopy = document.querySelector('footer p'); // Select footer text for click trigger
+
+            // Message Input Easter Egg
+            const messageInput = document.getElementById('message');
+            if (messageInput) {
+                messageInput.addEventListener('input', (e) => {
+                    const val = e.target.value.toLowerCase();
+                    if (val.endsWith("python")) createFloatingEmoji('🐍');
+                    if (val.endsWith("java")) createFloatingEmoji('☕');
+                });
+            }
 
             window.addEventListener('keydown', (e) => {
                 // Konami Logic
